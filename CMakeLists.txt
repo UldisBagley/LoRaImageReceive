@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(LoRaImageTransfer C)
+project(LoRaImageReceive C)
 
 # Add include directories
 include_directories(include)

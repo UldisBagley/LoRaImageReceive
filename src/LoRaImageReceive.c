@@ -151,7 +151,7 @@ void * rx_f(void *p){
 
     
     
-    sprintf(fileName, "/home/ubagley18/Documents/projects/LoRaImageReceive/src/testSplitReceive/image_%04d.jpg", fileIndex);
+    sprintf(fileName, "/home/ubagley18/Documents/projects/LoRaImageReceive/src/splitReceive/imageBit_%04d.jpg", fileIndex);
     printf("%s\n", fileName);
     fileIndex++;
 
@@ -162,12 +162,16 @@ void * rx_f(void *p){
     printf("Image loaded from buffer\n");
     int nbOfFiles;
     nbOfFiles = nbOfFilesInDirectory();
-    *nbOfFilesReceived  = nbOfFiles;
-    memcpy(modem->tx.data.buf, nbOfFilesReceived, sizeof(*nbOfFilesReceived));//copy data we'll sent to buffer
+    printf("Number of files loaded into int\n");
+    char nbOfFiles_String[4];
+    sprintf(nbOfFiles_String, "%d", nbOfFiles);
+    printf("Copied to string all g\n");
+    printf("Number of Files in directory: %s\n", nbOfFiles_String);
+    memcpy(modem->tx.data.buf, nbOfFiles_String, 4);//copy data we'll sent to buffer
     modem->tx.data.size = sizeof(modem->tx.data.buf);//Payload len
 
     //stbi_write_jpg(fileName, *width, *height, *channels, img, 100);
-    modem->tx.data.size = sizeof(*nbOfFilesReceived);//Payload len. 0 for unlimited
+    //modem->tx.data.size = sizeof(*nbOfFilesReceived);//Payload len. 0 for unlimited
     LoRa_send(modem);
     printf("Time on air data - Tsym: %f;\t", modem->tx.data.Tsym);
     printf("Tpkt: %f;\t", modem->tx.data.Tpkt);
@@ -207,7 +211,7 @@ int main(){
     modem.tx.data.userPtr = (void *)(&modem);//To handle with chip from tx callback
     modem.eth.preambleLen=6;
     modem.eth.bw = BW250;//Bankdwidth 250kHz//BW62_5;//Bandwidth 62.5KHz
-    modem.eth.sf = SF12;//Spreading Factor 7//SF12;//Spreading Factor 12
+    modem.eth.sf = SF7;//Spreading Factor 7//SF12;//Spreading Factor 12
     modem.eth.ecr = CR5;//Error coding rate CR4/8
     modem.eth.CRC = 0;//Turn off CRC checking
     modem.eth.freq = 434800000;// 434.8MHz
@@ -246,7 +250,7 @@ int nbOfFilesInDirectory(void)
 
     printf("Checking directory\n");
 
-    dirp = opendir("/home/ubagley18/Documents/projects/LoRaImageReceive/src/testSplitReceive"); /* There should be error handling after this */
+    dirp = opendir("/home/ubagley18/Documents/projects/LoRaImageReceive/src/splitReceive"); /* There should be error handling after this */
     if (dirp == NULL)
     {
         printf("Error opening directory");
